@@ -25,7 +25,7 @@ export default function Grid({ grid, reveal }) {
                                     }}
                                     style={{
                                         backgroundColor: cell.isRevealed ? (cell.revealedDisplay === '-1' ? 'red' : 'gray') : '#1a1a1a',
-                                        backgroundImage: (cell.isRevealed && cell.revealedDisplay === '-1' ? `url('src/assets/bomb.png')` : ''),
+                                        backgroundImage: (cell.isRevealed && cell.revealedDisplay === '-1' ? `url('public/bomb.png')` : ''),
                                         backgroundSize: 'contain',
                                     }}
                                 >

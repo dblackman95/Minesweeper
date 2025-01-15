@@ -48,7 +48,7 @@ table, td {
 
 .greenflag {
   background-color: #FFFFFF;
-  background-image: url('src/assets/flag.png');
+  background-image: url('public/flag.png');
 }
 
 .green_glow {
