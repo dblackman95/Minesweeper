@@ -29,7 +29,7 @@ export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRe
                             id='flagbutton'
                     >
                         <img 
-                            src='public/flag.png'
+                            src='flag.png'
                             style={{
                                 width: '5vw',
                                 height: '5vw',
@@ -59,14 +59,14 @@ export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRe
                 }}>
                     {gameover ?
                     <img 
-                        src='public/frown.png' 
+                        src='frown.png' 
                         style={{
                             width: '5vw',
                             height: '5vw',
                         }}
                     /> :
                     <img 
-                        src='public/smile.png' 
+                        src='smile.png' 
                         style={{
                             width: '5vw',
                             height: '5vw',
