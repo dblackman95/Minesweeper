@@ -5,11 +5,10 @@ Toolbar.propTypes = {
     setFlagEnabled: PropTypes.func,
     gameover: PropTypes.bool,
     flagsRemaining: PropTypes.number,
-    startTimer: PropTypes.bool,
     timer: PropTypes.number,
 };
 
-export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRemaining, startTimer, timer }) {
+export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRemaining, timer }) {
 
     const flagUrl = 'src/assets/flag.png';
     const smileUrl = 'src/assets/smile.png';

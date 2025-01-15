@@ -22,12 +22,8 @@ const useMinesweeper = (height, width, numMines) => {
                     matrix[i].push(0);
                 }
             }
-    
-            for (let i = 0; i < numMines; i++) {
-                let index_i = getRandomInt(width);
-                let index_j = getRandomInt(height);
-                matrix[index_i][index_j] = -1; //mine 
-            }
+
+            matrix = setMines(matrix, numMines);
     
             return generateProximities(matrix, width, height);
         }
@@ -95,12 +91,14 @@ const useMinesweeper = (height, width, numMines) => {
                             display: " ",
                             isRevealed: false,
                             revealedDisplay: " ",
+                            isFlagged: false,
                         }; 
                     } else {
                         newMatrix[i][j] = {
                             display: " ",
                             isRevealed: false,
                             revealedDisplay: matrix[i][j].toString(),
+                            isFlagged: false,
                         }
                     }
                 }
@@ -111,6 +109,41 @@ const useMinesweeper = (height, width, numMines) => {
     
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
+        }
+
+        function setMines(matrix, numMines) {
+            let numMinesNeeded = 0;
+            let countMines = 0;
+
+            for (let i = 0; i < matrix.length; i++) {
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (matrix[i][j] === -1)
+                        countMines++;
+                }
+            }
+
+            numMinesNeeded = numMines - countMines;
+
+
+            for (let i = 0; i < numMinesNeeded; i++) {
+                let index_i = getRandomInt(width);
+                let index_j = getRandomInt(height);
+                matrix[index_i][index_j] = -1; //mine 
+            }
+
+            countMines = 0;
+
+            for (let i = 0; i < matrix.length; i++) {
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (matrix[i][j] === -1)
+                        countMines++;
+                }
+            }
+
+            if (countMines < numMines)
+                return setMines(matrix, numMines);
+
+            return matrix;
         }
     
         function hasCellAbove(j) {
@@ -147,25 +180,20 @@ const useMinesweeper = (height, width, numMines) => {
                                 // console.log(tempCoord);
                                 setFlagCoordinates([...flagCoordinates, tempCoord]);
                                 setFlagsRemaining((value) => value > 0 ? value - 1 : 0);
+                                setFlag(i, j);
                                 document.getElementById(i.toString() + "_" + j.toString()).classList.add("greenflag");
+                                console.log(flagsRemaining);
                             }
                         } else { //flag HAS already been placed at coordinates i, j
                             // console.log("Flag has been placed at (" + i.toString() + ", " + j.toString() + ").");
                             setFlagCoordinates(() => [...removeFlagCoordinates(i, j)]);
                             setFlagsRemaining((value) => value + 1);
+                            removeFlag(i, j);
                             document.getElementById(i.toString() + "_" + j.toString()).classList.remove("greenflag");
                         }
                     } else {
                         // We need to make sure a cell that is flagged cannot be clicked (because it's a bomb and the player will lose the game!)
-                        let foundInFlagCoordinates = false;
-                        let templist = [];
-                        templist.push(i);
-                        templist.push(j);
-                        flagCoordinates.forEach((coordinate) => {
-                            if (JSON.stringify(templist) === JSON.stringify(coordinate))
-                                foundInFlagCoordinates = true;
-                        });
-                        if (!foundInFlagCoordinates) {
+                        if (!grid[i][j].isFlagged) {
                             let tempGrid = grid.map(row => [...row]);
                             tempGrid[i][j].isRevealed = true;
                             if (tempGrid[i][j].revealedDisplay === '-1') { // Game over condition
@@ -179,7 +207,7 @@ const useMinesweeper = (height, width, numMines) => {
                             }
                         }
                     }
-                }
+                } 
             }
         }
     
@@ -187,15 +215,7 @@ const useMinesweeper = (height, width, numMines) => {
             if (!hasCellToLeft(i)) {
                 setGrid(tempGrid); //return
             } else {
-                let foundInFlagCoordinates = false;
-                let templist = [];
-                templist.push(i);
-                templist.push(j);
-                tempGrid.forEach((coordinate) => {
-                    if (JSON.stringify(templist) === JSON.stringify(coordinate))
-                        foundInFlagCoordinates = true;
-                });
-                if (!foundInFlagCoordinates) {
+                if (!tempGrid[i - 1][j].isFlagged) {
                     if (!tempGrid[i - 1][j].isRevealed) {
                         if (tempGrid[i - 1][j].revealedDisplay === " ") {
                             tempGrid[i - 1][j].isRevealed = true;
@@ -209,7 +229,7 @@ const useMinesweeper = (height, width, numMines) => {
                             setGrid(tempGrid); //return
                         }
                     } setGrid(tempGrid); //return
-                }
+                } setGrid(tempGrid); //return
             }
         }
     
@@ -217,15 +237,7 @@ const useMinesweeper = (height, width, numMines) => {
             if (!hasCellToRight(i)) {
                 setGrid(tempGrid); //return
             } else {
-                let foundInFlagCoordinates = false;
-                let templist = [];
-                templist.push(i);
-                templist.push(j);
-                tempGrid.forEach((coordinate) => {
-                    if (JSON.stringify(templist) === JSON.stringify(coordinate))
-                        foundInFlagCoordinates = true;
-                });
-                if (!foundInFlagCoordinates) {
+                if (!tempGrid[i + 1][j].isFlagged) {
                     if (!tempGrid[i + 1][j].isRevealed) {
                         if (tempGrid[i + 1][j].revealedDisplay === " ") {
                             tempGrid[i + 1][j].isRevealed = true;
@@ -239,7 +251,7 @@ const useMinesweeper = (height, width, numMines) => {
                             setGrid(tempGrid); //return
                         }
                     } setGrid(tempGrid); //return
-                }
+                } setGrid(tempGrid); //return
             }
         }
     
@@ -247,15 +259,7 @@ const useMinesweeper = (height, width, numMines) => {
             if (!hasCellAbove(j)) {
                 setGrid(tempGrid); //return
             } else {
-                let foundInFlagCoordinates = false;
-                let templist = [];
-                templist.push(i);
-                templist.push(j);
-                tempGrid.forEach((coordinate) => {
-                    if (JSON.stringify(templist) === JSON.stringify(coordinate))
-                        foundInFlagCoordinates = true;
-                });
-                if (!foundInFlagCoordinates) {
+                if (!tempGrid[i][j - 1].isFlagged) {
                     if (!tempGrid[i][j - 1].isRevealed) {
                         if (tempGrid[i][j - 1].revealedDisplay === " ") {
                             tempGrid[i][j - 1].isRevealed = true;
@@ -269,7 +273,7 @@ const useMinesweeper = (height, width, numMines) => {
                             setGrid(tempGrid); //return
                         }
                     } setGrid(tempGrid); //return
-                }
+                } setGrid(tempGrid); //return
             }
         }
     
@@ -277,15 +281,7 @@ const useMinesweeper = (height, width, numMines) => {
             if (!hasCellBelow(j)) {
                 setGrid(tempGrid); //return
             } else {
-                let foundInFlagCoordinates = false;
-                let templist = [];
-                templist.push(i);
-                templist.push(j);
-                tempGrid.forEach((coordinate) => {
-                    if (JSON.stringify(templist) === JSON.stringify(coordinate))
-                        foundInFlagCoordinates = true;
-                });
-                if (!foundInFlagCoordinates) {
+                if (!tempGrid[i][j + 1].isFlagged) {
                     if (!tempGrid[i][j + 1].isRevealed) {
                         if (tempGrid[i][j + 1].revealedDisplay === " ") {
                             tempGrid[i][j + 1].isRevealed = true;
@@ -299,19 +295,19 @@ const useMinesweeper = (height, width, numMines) => {
                             setGrid(tempGrid); //return
                         }
                     } setGrid(tempGrid); //return
-                }
+                } setGrid(tempGrid); //return
             }
         }
 
-        function addFlagCoordinates(i, j) {
-            let tempFlagCoordinates = flagCoordinates.map(item => [...item]);
-            console.log("There are " + tempFlagCoordinates.length.toString() + "items in the list");
-            let list = [];
-            list.push(i);
-            list.push(j);
-            tempFlagCoordinates.push(list);
-            return tempFlagCoordinates;
-        }
+        // function addFlagCoordinates(i, j) {
+        //     let tempFlagCoordinates = flagCoordinates.map(item => [...item]);
+        //     console.log("There are " + tempFlagCoordinates.length.toString() + "items in the list");
+        //     let list = [];
+        //     list.push(i);
+        //     list.push(j);
+        //     tempFlagCoordinates.push(list);
+        //     return tempFlagCoordinates;
+        // }
 
         function removeFlagCoordinates(i, j) {
             let tempFlagCoordinates = flagCoordinates.map(item => [...item]);
@@ -321,6 +317,18 @@ const useMinesweeper = (height, width, numMines) => {
         function coordinatesFound(i, j) {
             let tempFlagCoordinates = flagCoordinates.map(item => [...item]);
             return (tempFlagCoordinates.findIndex(item => JSON.stringify(item) === JSON.stringify([i, j])) === -1);
+        }
+
+        function setFlag(i, j) {
+            let tempGrid = grid.map(row => [...row]);
+            tempGrid[i][j].isFlagged = true;
+            setGrid(tempGrid);
+        }
+
+        function removeFlag(i, j) {
+            let tempGrid = grid.map(row => [...row]);
+            tempGrid[i][j].isFlagged = false;
+            setGrid(tempGrid);
         }
     
         function gameOver() {
@@ -332,6 +340,34 @@ const useMinesweeper = (height, width, numMines) => {
             setGameover(gameover => !gameover);
             setStartTimer(false);
         }
+
+        function checkWinCondition() {
+            let numRevealed = 0;
+            (grid && grid.forEach((row) => {
+                row.forEach((cell) => {
+                    if (cell.isRevealed)
+                        numRevealed++;
+                })
+            }));
+            
+            console.log(numRevealed);
+
+            if (flagsRemaining === 0) {
+                console.log((numRevealed + numMines) + " = " + (height * width));
+                if (numRevealed + numMines === (height * width))
+                    winCondition();
+            }
+        }
+
+        function winCondition() {
+            setTimeout(() => alert("Congratulations! You won in " + timer + " seconds!"), 500);
+            setGameover(gameover => !gameover);
+            setStartTimer(false);
+        }
+
+        useEffect(() => {
+            checkWinCondition();
+        }, [grid, flagsRemaining, setFlagsRemaining]);
     
         useEffect(() => {
             setGrid(generateGameBoard(width, height, numMines));
@@ -344,7 +380,7 @@ const useMinesweeper = (height, width, numMines) => {
 
     
 
-    return {flagEnabled, setFlagEnabled, gameover, setGameover, grid, setGrid, reveal, flagsRemaining, flagCoordinates, startTimer, timer};
+    return {flagEnabled, setFlagEnabled, gameover, grid, reveal, flagsRemaining, timer};
 }
 
 export default useMinesweeper;

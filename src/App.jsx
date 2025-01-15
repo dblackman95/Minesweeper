@@ -9,9 +9,9 @@ function App() {
 
   const width = 16;
   const height = 16;
-  const numMines = 15;
+  const numMines = 40;
 
-  const {flagEnabled, setFlagEnabled, gameover, setGameover, grid, setGrid, reveal, flagsRemaining, flagCoordinates, startTimer, timer} = useMinesweeper(width, height, numMines);
+  const {flagEnabled, setFlagEnabled, gameover, grid, reveal, flagsRemaining, timer} = useMinesweeper(width, height, numMines);
 
 
 
@@ -23,13 +23,11 @@ function App() {
             setFlagEnabled={setFlagEnabled} 
             gameover={gameover} 
             flagsRemaining={flagsRemaining} 
-            startTimer={startTimer} 
             timer={timer} 
         />
         <Grid 
             grid={grid} 
             reveal={reveal} 
-            flagCoordinates={flagCoordinates} 
         />
       </div>
     </div>

@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 Grid.propTypes = {
     grid: PropTypes.array,
     reveal: PropTypes.func.isRequired,
-    flagCoordinates: PropTypes.array,
 };
 
-export default function Grid({ grid, reveal, flagCoordinates }) {
+export default function Grid({ grid, reveal }) {
 
     const bombUrl = 'src/assets/bomb.png';
-    const flagUrl = 'src/assets/flag.png';
 
     
     return (
