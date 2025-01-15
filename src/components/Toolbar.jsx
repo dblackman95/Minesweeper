@@ -10,10 +10,6 @@ Toolbar.propTypes = {
 
 export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRemaining, timer }) {
 
-    const flagUrl = 'src/assets/flag.png';
-    const smileUrl = 'src/assets/smile.png';
-    const frownUrl = 'src/assets/frown.png';
-
     return (
         <div style={{
             display: 'flex',
@@ -33,7 +29,7 @@ export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRe
                             id='flagbutton'
                     >
                         <img 
-                            src={flagUrl} 
+                            src='src/assets/flag.png'
                             style={{
                                 width: '5vw',
                                 height: '5vw',
@@ -63,14 +59,14 @@ export default function Toolbar({ flagEnabled, setFlagEnabled, gameover, flagsRe
                 }}>
                     {gameover ?
                     <img 
-                        src={frownUrl} 
+                        src='src/assets/frown.png' 
                         style={{
                             width: '5vw',
                             height: '5vw',
                         }}
                     /> :
                     <img 
-                        src={smileUrl} 
+                        src='src/assets/smile.png' 
                         style={{
                             width: '5vw',
                             height: '5vw',

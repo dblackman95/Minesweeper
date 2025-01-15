@@ -7,8 +7,6 @@ Grid.propTypes = {
 
 export default function Grid({ grid, reveal }) {
 
-    const bombUrl = 'src/assets/bomb.png';
-
     
     return (
         <div style={{ display: 'flex', alignItems: 'center',}}>
@@ -27,7 +25,7 @@ export default function Grid({ grid, reveal }) {
                                     }}
                                     style={{
                                         backgroundColor: cell.isRevealed ? (cell.revealedDisplay === '-1' ? 'red' : 'gray') : '#1a1a1a',
-                                        backgroundImage: (cell.isRevealed && cell.revealedDisplay === '-1' ? `url(${bombUrl})` : ''),
+                                        backgroundImage: (cell.isRevealed && cell.revealedDisplay === '-1' ? `url('src/assets/bomb.png')` : ''),
                                         backgroundSize: 'contain',
                                     }}
                                 >
